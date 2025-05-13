@@ -4,7 +4,7 @@
 TEST_DIR ?= tests/
 BROWSER ?= chromium
 export REPORT_DIR ?= reports/
-WORKERS ?= auto
+WORKERS ?= n
 
 .PHONY: help install test test-parallel report clean lint format
 
@@ -24,12 +24,32 @@ install:
 
 test:
 	pytest $(TEST_DIR) \
+    	--browser $(BROWSER) \
+    	--headless=$(HEADLESS) \
+    	--html=$(REPORT_DIR)/report.html \
+    	--self-contained-html \
+   		--alluredir=$(REPORT_DIR)/allure-results \
+    
+test-smoke:
+	pytest $(TEST_DIR) \
+		-m smoke \
 		--browser $(BROWSER) \
 		--headless=$(HEADLESS) \
 		--html=$(REPORT_DIR)/report.html \
-		--self-contained-html
+		--self-contained-html \
 		--alluredir=$(REPORT_DIR)/allure-results \
 		--reruns 2
+
+test-regression:
+	pytest $(TEST_DIR) \
+		-m regression \
+		--browser $(BROWSER) \
+		--headless=$(HEADLESS) \
+		--html=$(REPORT_DIR)/report.html \
+		--self-contained-html \
+		--alluredir=$(REPORT_DIR)/allure-results \
+		--reruns 2
+		
 		
 		
 
